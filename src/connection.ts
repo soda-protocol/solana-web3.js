@@ -3191,7 +3191,7 @@ export class Connection {
 
     const unsafeRes = await this._rpcBatchRequest(batch);
     const res = unsafeRes.map((unsafeRes: any) => {
-      const res = create(unsafeRes, GetParsedConfirmedTransactionRpcResult);
+      const res = create(unsafeRes, GetConfirmedTransactionRpcResult);
       if ('error' in res) {
         throw new Error(
           'failed to get confirmed transactions: ' + res.error.message,
