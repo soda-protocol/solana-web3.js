@@ -3177,7 +3177,7 @@ export class Connection {
   async getConfirmedTransactions(
     signatures: TransactionSignature[],
     commitment?: Finality,
-  ): Promise<(ParsedConfirmedTransaction | null)[]> {
+  ): Promise<(ConfirmedTransaction | null)[]> {
     const batch = signatures.map(signature => {
       const args = this._buildArgsAtLeastConfirmed(
         [signature],
