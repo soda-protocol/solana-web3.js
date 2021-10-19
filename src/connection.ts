@@ -3172,6 +3172,38 @@ export class Connection {
   }
 
   /**
+   * Fetch transaction details for a batch of confirmed transactions
+   */
+  async getConfirmedTransactions(
+    signatures: TransactionSignature[],
+    commitment?: Finality,
+  ): Promise<(ParsedConfirmedTransaction | null)[]> {
+    const batch = signatures.map(signature => {
+      const args = this._buildArgsAtLeastConfirmed(
+        [signature],
+        commitment,
+      );
+      return {
+        methodName: 'getConfirmedTransaction',
+        args,
+      };
+    });
+
+    const unsafeRes = await this._rpcBatchRequest(batch);
+    const res = unsafeRes.map((unsafeRes: any) => {
+      const res = create(unsafeRes, GetParsedConfirmedTransactionRpcResult);
+      if ('error' in res) {
+        throw new Error(
+          'failed to get confirmed transactions: ' + res.error.message,
+        );
+      }
+      return res.result;
+    });
+
+    return res;
+  }
+
+  /**
    * Fetch parsed transaction details for a confirmed transaction
    */
   async getParsedConfirmedTransaction(
